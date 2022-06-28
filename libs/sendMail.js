@@ -18,13 +18,13 @@ const transport = nodemailer.createTransport(transportEngine);
 transport.use('compile', htmlToText());
 
 module.exports = async function sendMail(attachments, fileName, options) {
-  const html = `<h1>${fileName} </h1>`;
+  const html = `<h3>You receive: ${fileName} </h3>`;
 
   const message = {
     html: html,
     from: config.sender.user,
     to: {
-      address: 'bohdan.oleksa@gmail.com',
+      address: config.recipients,
     },
     subject: 'New PDF files',
     attachments: attachments,

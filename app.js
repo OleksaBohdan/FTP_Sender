@@ -20,11 +20,9 @@ function makeFileNamesList(FTP, folderFilesPath) {
     ftp
       .connect({ host: FTP.ServerName, port: FTP.ServerPort, user: FTP.Username, password: FTP.Password })
       .then(function (msg) {
-        // console.log('Connection succesful:', msg);
         return;
       })
       .then(function () {
-        // console.log('Forming list of files...', folderFilesPath);
         return ftp.list(folderFilesPath);
       })
       .then(function (list) {
@@ -34,12 +32,9 @@ function makeFileNamesList(FTP, folderFilesPath) {
         const pdfList = createPdfArr(list);
         const dbList = createArrFromDB();
         const downloadList = createArrListToDownload(dbList, pdfList);
-        // console.log('PDF on the FTP:', pdfList);
-        // console.log('PDF on the DB:', dbList);
         return downloadList;
       })
       .then(function (downloadList) {
-        // console.log('List to download:', downloadList);
         ftp.end();
         resolve(downloadList);
         return downloadList;
@@ -54,7 +49,6 @@ function downloadNewFiles(fileNamesArr, FTP, folderFilesPath, cb) {
       .connect({ host: FTP.ServerName, port: FTP.ServerPort, user: FTP.Username, password: FTP.Password })
       .then(function (msg) {
         console.log('Connection succesful:', msg);
-
         // Download file
         function downloadFile(filename) {
           return new Promise((resolve, reject) => {
@@ -117,10 +111,8 @@ module.exports = async function main() {
     await downloadNewFiles(fileNamesArr, FTPServer, folderPATH, () => {
       fileNamesArr.pop();
       const attachments = createAttachments(fileNamesArr);
-      // console.log(attachments);
       sendMail(attachments, fileNamesArr)
         .then((msg) => {
-          // console.log(msg);
           if (msg.response.includes('250')) {
             console.log(`OK Data sent successfully from ${msg.envelope.from} to ${msg.envelope.to}`);
             writeFilesToDB(fileNamesArr);
